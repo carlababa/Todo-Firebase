@@ -8,11 +8,11 @@ const editTodoAction = (id, todo) => ({ type: types.EDIT_TODO, id, todo });
 const completedAllAction = completed => ({ type: types.COMPLETE_ALL, completed });
 const clearCompletedSuccess = () => ({ type: types.CLEAR_COMPLETED });
 
-export const addTodo = (text, dueDate) => (
+export const addTodo = text => (
   (dispatch) => {
     const todo = {
       text,
-      dueDate: dueDate || null,
+      date: null,
       completed: false,
     };
     const userId = firebase.auth.currentUser.uid;
@@ -74,3 +74,9 @@ export const clearCompleted = () => (
       .then(() => dispatch(clearCompletedSuccess()));
   }
 );
+
+export const increaseTodoPriority = todo => (dispatch, getState) => {
+  const { todos } = getState();
+  const todoIndex = todos.map(t => t.id).indexOf(todo.id);
+  const swappedTodo = todos[todoIndex - 1];
+};

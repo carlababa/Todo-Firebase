@@ -11,7 +11,11 @@ export default function todos(state = initialState, action) {
       ];
 
     case GET_TODOS: {
-      const todoList = Object.keys(action.todos).map(id => ({ id, ...action.todos[id] }));
+      const todoList = Object.keys(action.todos).map((id) => {
+        const todo = action.todos[id];
+        const dueTime = todo.dueTime ? new Date(todo.dueTime) : null;
+        return { ...todo, id, dueTime };
+      });
       return [
         ...state,
         ...todoList,
