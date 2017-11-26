@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Header from '../components/Header';
-import MainSection from '../components/MainSection';
+import Header from './Header';
+import MainSection from './MainSection';
 
 const App = ({ todos, actions }) => (
   <div>

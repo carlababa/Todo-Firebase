@@ -18,7 +18,7 @@ const initialState = {
   isFetched: false,
   isFetching: false,
   error: false,
-  errorMessage: null,
+  errorMessage: undefined,
 };
 
 export default function auth(state = initialState, action) {

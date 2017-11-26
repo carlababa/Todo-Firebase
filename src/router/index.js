@@ -11,6 +11,7 @@ import App from '../containers/App';
 import PrivateRoute from './PrivateRoute';
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
+import NavigationBar from '../components/NavigationBar';
 import { mapStateToProps, mapDispatchToProps } from '../containers/Auth';
 
 class Router extends Component {
@@ -26,11 +27,17 @@ class Router extends Component {
   render() {
     return (
       <BrowserRouter>
-        <Switch>
-          <Route exact path="/signin" component={SignIn} />
-          <Route exact path="/signup" component={SignUp} />
-          <PrivateRoute path="/" authed={this.props.auth.isLoggedIn} component={App} />
-        </Switch>
+        <div>
+          <NavigationBar
+            actions={this.props.actions}
+            auth={this.props.auth}
+          />
+          <Switch>
+            <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/signup" component={SignUp} />
+            <PrivateRoute path="/" authed={this.props.auth.isLoggedIn} component={App} />
+          </Switch>
+        </div>
       </BrowserRouter>
     );
   }

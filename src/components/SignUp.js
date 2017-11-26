@@ -1,37 +1,48 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { mapDispatchToProps, mapStateToProps } from '../containers/Auth';
+import SubmissionForm from './SubmissionForm';
+import { StyledLink, Centered } from './styledComponents';
 
 class SignUp extends Component {
   state = {
     email: '',
     password: '',
-    redirectToReferrer: false,
   }
 
-  handleSubmit = (evt) => {
-    // evt.preventDefault();
-    // auth.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
-    //   this.setState({redirectToReferrer: true});
-    // });
-  }
-
-  setValue(e) {
+  setValue = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.actions.signUp(this.state.email, this.state.password);
   }
 
   render() {
     return (
-      <section>
-        <p>You must log in to view add a TODO</p>
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" name="email" value={this.state.email} onChange={e => this.setState({ email: e.target.value })} />
-          <input type="password" name="password" value={this.state.password} onChange={e => this.setState({ password: e.target.value })} />
-          <button type="submit">Sign In</button>
-        </form>
-        <Link to='/signin'>Sign In</Link>
-      </section>
+      <Centered>
+        {this.props.auth.isLoggedIn && <Redirect to="/" />}
+        <p>You must sign up to add a TODO</p>
+        <SubmissionForm
+          handleSubmit={this.handleSubmit}
+          setValue={this.setValue}
+          email={this.state.email}
+          password={this.state.password}
+          buttonText="Sign Up"
+          errorMessage={this.props.auth.error && this.props.auth.errorMessage}
+        />
+        <StyledLink href="/signin" to="/signin">Sign In</StyledLink>
+      </Centered>
     );
   }
 }
 
-export default SignUp;
+SignUp.propTypes = {
+  actions: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
