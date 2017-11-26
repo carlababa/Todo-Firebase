@@ -12,6 +12,5 @@ const config = {
 firebase.initializeApp(config);
 
 export const database = firebase.database();
-export const todos = database.ref('/todos');
 export const auth = firebase.auth();
-export const isAuthenticated = () => !!auth.currentUser;
+export const todos = userId => database.ref(`users/${userId}/todos`);

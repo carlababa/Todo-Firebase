@@ -15,35 +15,38 @@ export const addTodo = (text, dueDate) => (
       dueDate: dueDate || null,
       completed: false,
     };
-
-    firebase.todos.push(todo)
+    const userId = firebase.auth.currentUser.uid;
+    return firebase.todos(userId).push(todo)
       .then(response => dispatch(addTodoSuccess({ ...todo, id: response.key })));
   }
 );
 
 export const getTodos = () => (
-  dispatch => (
-    firebase.todos.once('value', (snap) => {
+  (dispatch) => {
+    const userId = firebase.auth.currentUser.uid;
+    return firebase.todos(userId).once('value', (snap) => {
       const todos = snap.val();
       if (todos) {
         dispatch(getTodosSuccess(todos));
       }
-    })
-  )
+    });
+  }
 );
 
 export const editTodo = (todo, attr) => (
   (dispatch) => {
     dispatch(editTodoAction(todo.id, attr));
-    return firebase.todos.child(todo.id).update(attr)
+    const userId = firebase.auth.currentUser.uid;
+    return firebase.todos(userId).child(todo.id).update(attr)
       .catch(() => dispatch(editTodoAction(todo.id, todo)));
   }
 );
 
-export const deleteTodo = id => (
-  dispatch => firebase.todos.child(id).remove()
-    .then(() => dispatch(deleteTodoSuccess(id)))
-);
+export const deleteTodo = id => (dispatch) => {
+  const userId = firebase.auth.currentUser.uid;
+  return firebase.todos(userId).child(id).remove()
+    .then(() => dispatch(deleteTodoSuccess(id)));
+};
 
 export const completeAll = () => (
   (dispatch, getState) => {
@@ -53,7 +56,8 @@ export const completeAll = () => (
     todos.forEach((todo) => {
       toUpdate[todo.id] = { ...todo, completed };
     });
-    return firebase.todos.update(toUpdate)
+    const userId = firebase.auth.currentUser.uid;
+    return firebase.todos(userId).update(toUpdate)
       .then(() => dispatch(completedAllAction(completed)));
   }
 );
@@ -65,7 +69,8 @@ export const clearCompleted = () => (
     completedTodos.forEach((todo) => {
       toUpdate[todo.id] = null;
     });
-    return firebase.todos.update(toUpdate)
+    const userId = firebase.auth.currentUser.uid;
+    return firebase.todos(userId).update(toUpdate)
       .then(() => dispatch(clearCompletedSuccess()));
   }
 );

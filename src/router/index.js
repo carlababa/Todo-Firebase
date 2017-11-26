@@ -5,6 +5,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import * as firebase from '../firebase';
 import App from '../containers/App';
 import PrivateRoute from './PrivateRoute';
@@ -18,7 +19,7 @@ class Router extends Component {
       if (user) {
         this.props.actions.userIsFetched();
       } else {
-        // No user is signed in.
+        this.props.actions.userIsLoggedOut();
       }
     });
   }
@@ -34,5 +35,10 @@ class Router extends Component {
     );
   }
 }
+
+Router.propTypes = {
+  actions: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Router);
