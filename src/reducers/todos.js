@@ -1,4 +1,4 @@
-import { ADD_TODO, GET_TODOS, DELETE_TODO, EDIT_TODO, COMPLETE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes';
+import { ADD_TODO, GET_TODOS, UPDATE_TODOS, DELETE_TODO, EDIT_TODO, COMPLETE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes';
 
 const initialState = [];
 
@@ -11,16 +11,11 @@ export default function todos(state = initialState, action) {
       ];
 
     case GET_TODOS: {
-      const todoList = Object.keys(action.todos).map((id) => {
-        const todo = action.todos[id];
-        const dueTime = todo.dueTime ? new Date(todo.dueTime) : null;
-        return { ...todo, id, dueTime };
-      });
-      return [
-        ...state,
-        ...todoList,
-      ];
+      return [...action.todos];
     }
+
+    case UPDATE_TODOS:
+      return [...action.todos];
 
     case DELETE_TODO:
       return state.filter(todo => todo.id !== action.id);

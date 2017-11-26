@@ -3,6 +3,7 @@ import * as firebase from '../firebase';
 
 const addTodoSuccess = todo => ({ type: types.ADD_TODO, todo });
 const getTodosSuccess = todos => ({ type: types.GET_TODOS, todos });
+const updateTodos = todos => ({ type: types.UPDATE_TODOS, todos });
 const deleteTodoSuccess = id => ({ type: types.DELETE_TODO, id });
 const editTodoAction = (id, todo) => ({ type: types.EDIT_TODO, id, todo });
 const completedAllAction = completed => ({ type: types.COMPLETE_ALL, completed });
@@ -24,8 +25,14 @@ export const addTodo = text => (
 export const getTodos = () => (
   (dispatch) => {
     const userId = firebase.auth.currentUser.uid;
-    return firebase.todos(userId).once('value', (snap) => {
-      const todos = snap.val();
+    return firebase.todos(userId).orderByChild('priority').once('value', (snap) => {
+      const todos = [];
+      snap.forEach((item) => {
+        const todo = item.val();
+        const dueTime = todo.dueTime ? new Date(todo.dueTime) : null;
+        todos.push({ ...todo, id: item.key, dueTime });
+      });
+
       if (todos) {
         dispatch(getTodosSuccess(todos));
       }
@@ -75,8 +82,27 @@ export const clearCompleted = () => (
   }
 );
 
-export const increaseTodoPriority = todo => (dispatch, getState) => {
-  const { todos } = getState();
-  const todoIndex = todos.map(t => t.id).indexOf(todo.id);
-  const swappedTodo = todos[todoIndex - 1];
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
 };
+
+export const reorderTodos = (from, to) => (
+  (dispatch, getState) => {
+    const { todos } = getState();
+    const userId = firebase.auth.currentUser.uid;
+    const reorderedTodos = reorder(todos, from, to);
+
+    const toUpdate = {};
+    reorderedTodos.forEach((todo, i) => {
+      toUpdate[todo.id] = { ...todo, priority: i };
+    });
+
+    dispatch(updateTodos(reorderedTodos));
+    return firebase.todos(userId).update(toUpdate)
+      .catch(() => dispatch(updateTodos(todos)));
+  }
+);

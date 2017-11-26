@@ -14,7 +14,7 @@ import {
 
 const initialState = {
   name: null,
-  isLoggedIn: false,
+  isLoggedIn: undefined,
   isFetched: false,
   isFetching: false,
   error: false,

@@ -23,6 +23,8 @@ export default class TodoTextInput extends Component {
         this.setState({ text: '' });
       }
     }
+
+    e.stopPropagation();
   }
 
   handleChange = (e) => {
@@ -45,6 +47,7 @@ export default class TodoTextInput extends Component {
         type="text"
         placeholder={this.props.placeholder}
         value={this.state.text}
+        onMouseDown={e => e.stopPropagation()}
         onBlur={this.handleBlur}
         onChange={this.handleChange}
         onKeyDown={this.handleSubmit}
