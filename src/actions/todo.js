@@ -4,10 +4,9 @@ import * as firebase from '../firebase';
 const addTodoSuccess = todo => ({ type: types.ADD_TODO, todo });
 const getTodosSuccess = todos => ({ type: types.GET_TODOS, todos });
 const deleteTodoSuccess = id => ({ type: types.DELETE_TODO, id });
-export const editTodoAction = (id, todo) => ({ type: types.EDIT_TODO, id, todo });
-export const completedAllAction = completed => ({ type: types.COMPLETE_ALL, completed });
-export const clearCompletedSuccess = () => ({ type: types.CLEAR_COMPLETED });
-
+const editTodoAction = (id, todo) => ({ type: types.EDIT_TODO, id, todo });
+const completedAllAction = completed => ({ type: types.COMPLETE_ALL, completed });
+const clearCompletedSuccess = () => ({ type: types.CLEAR_COMPLETED });
 
 export const addTodo = (text, dueDate) => (
   (dispatch) => {
