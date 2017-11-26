@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import TodoTextInput from './TodoTextInput';
+import TimeToEnd from './TimeToEnd';
 
 const TimePickerStyled = styled(TimePicker)`
   margin-left: 60px;
@@ -11,6 +12,10 @@ const TimePickerStyled = styled(TimePicker)`
 
 const StyledInput = styled.input`
   margin-top: 15px;
+`;
+
+const StyledContainer = styled.div`
+  border-bottom: 1px solid #e8e7e7;
 `;
 
 export default class TodoItem extends Component {
@@ -43,6 +48,11 @@ export default class TodoItem extends Component {
     });
   }
 
+  playSound = () => {
+    const audio = new Audio('oh_o_gas.wav');
+    audio.play();
+  }
+
   render() {
     const { todo, deleteTodo } = this.props;
 
@@ -62,21 +72,26 @@ export default class TodoItem extends Component {
           <label htmlFor={`todo_${todo.id}`} onDoubleClick={this.handleDoubleClick}>
             {todo.text}
           </label>
-          <button className="destroy" onClick={() => deleteTodo(todo.id)} />
+          <button className="destroy" style={{ marginTop: '5px' }} onClick={() => deleteTodo(todo.id)} />
         </div>
       );
     }
 
     return (
-      <li className={classnames({ completed: todo.completed, editing: this.state.editing })}>
-        {element}
-        <TimePickerStyled
-          hintText="Due Time"
-          mode="landscape"
-          value={todo.dueTime}
-          onChange={(x, dueTime) => this.handleSave(todo, { dueTime })}
-        />
-      </li>
+      <StyledContainer>
+        <li className={classnames({ completed: todo.completed, editing: this.state.editing })}>
+          {element}
+          <TimePickerStyled
+            hintText="Due Time"
+            mode="landscape"
+            value={todo.dueTime}
+            onChange={(x, dueTime) => this.handleSave(todo, { dueTime })}
+          />
+          {todo.dueTime &&
+            <TimeToEnd dueTime={todo.dueTime} onPassedNow={this.playSound} />
+          }
+        </li>
+      </StyledContainer>
     );
   }
 }

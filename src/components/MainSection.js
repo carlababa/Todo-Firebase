@@ -33,7 +33,9 @@ export default class MainSection extends Component {
 
   onDragEnd = (results) => {
     const { actions } = this.props;
-    actions.reorderTodos(results.source.index, results.destination.index);
+    if (results.destination && results.destination.index !== results.source.index) {
+      actions.reorderTodos(results.source.index, results.destination.index);
+    }
   }
 
   handleShow = (filter) => {
@@ -53,6 +55,7 @@ export default class MainSection extends Component {
             className="toggle-all"
             type="checkbox"
             checked={completedCount === todos.length}
+            readOnly
           />
           <label onClick={actions.completeAll} />
         </span>
