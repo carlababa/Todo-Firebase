@@ -1,22 +1,22 @@
-import React from 'react'
-import { render } from 'react-dom'
-import { createStore, applyMiddleware } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import thunk from 'redux-thunk'
-import { Provider } from 'react-redux'
-import App from './containers/App'
-import reducer from './reducers'
-import 'todomvc-app-css/index.css'
-import './index.css'
+import React from 'react';
+import { render } from 'react-dom';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import 'todomvc-app-css/index.css';
+import Router from './router';
+import reducer from './reducers';
+import './index.css';
 
 const store = createStore(
   reducer,
-  composeWithDevTools(applyMiddleware(thunk))
-)
+  composeWithDevTools(applyMiddleware(thunk)),
+);
 
 render(
   <Provider store={store}>
-    <App />
+    <Router />
   </Provider>,
-  document.getElementById('root')
-)
+  document.getElementById('root'),
+);
